@@ -218,9 +218,12 @@ void PluginJuno::processWithinBufferLimit(const float* in, float* outL, float* o
         break;
     }
 
+    bool isFast = fParams[pIdFast] > 0.5f;
+
     for (unsigned i = 0; i < frames; ++i) {
         float lfo1 = kLfoAmplitude * lfoOutput[i];
-        float lfo2 = kLfoAmplitude * (1 - lfoOutput[i]);
+        float lfo1Invert = kLfoAmplitude * (1 - lfoOutput[i]);
+        float lfo2 = isFast ? lfo1 : lfo1Invert;
 
         clock1[i] = samplePeriod *
             BBD_Line::hz_rate_for_delay(kLineAvgDelay + lfo1 * kLineDelayModRange, kDelayChipStages);

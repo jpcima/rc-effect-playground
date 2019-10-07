@@ -28,6 +28,12 @@ void InitParameter(uint32_t index, Parameter& parameter)
         parameter.name = "LFO amplitude (circuit characteristic)";
         parameter.ranges = ParameterRanges(1.0, 0.0, 1.0);
         break;
+    case pIdFast:
+        parameter.symbol = "fast";
+        parameter.name = "Fast";
+        parameter.ranges = ParameterRanges(0, 0, 1);
+        parameter.hints |= kParameterIsBoolean|kParameterIsInteger;
+        break;
     case pIdLineDelay:
         parameter.symbol = "line_delay";
         parameter.name = "Line Delay (ms) (circuit characteristic)";

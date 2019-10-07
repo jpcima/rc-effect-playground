@@ -6,6 +6,7 @@ enum Parameters {
     pIdLfoType,
     pIdLfoSpeed,
     pIdLfoAmplitude,
+    pIdFast,
     pIdLineDelay,
     pIdDelayModAmount,
     pIdWet,

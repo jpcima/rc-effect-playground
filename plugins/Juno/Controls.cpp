@@ -10,6 +10,12 @@ void InitParameter(uint32_t index, Parameter& parameter)
     case pIdBypass:
         parameter.initDesignation(kParameterDesignationBypass);
         break;
+    case pIdLfoType:
+        parameter.symbol = "lfo_type";
+        parameter.name = "LFO type (0=triangle, 1=sine) (circuit characteristic)";
+        parameter.ranges = ParameterRanges(0, 0, 1);
+        parameter.hints |= kParameterIsInteger;
+        break;
     case pIdLfoSpeed:
         parameter.symbol = "lfo_speed";
         parameter.name = "LFO speed (Hz) (circuit characteristic)";

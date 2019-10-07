@@ -119,6 +119,11 @@ private:
 
     enum { kBufferLimit = 256 }; /* maximum samples in one run */
 
+    enum LfoType {
+        kLfoTriangle,
+        kLfoSine,
+    };
+
     // /* Chorus fixed constants (TODO set correct values; these from Dimension-D ratings) */
     // static constexpr float kLineAvgDelay = 10e-3;
     // static constexpr float kLineDelayModRange = 2e-3;

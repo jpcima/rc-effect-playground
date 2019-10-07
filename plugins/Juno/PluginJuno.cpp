@@ -141,9 +141,30 @@ void PluginJuno::run(const float** inputs, float** outputs, uint32_t frames) {
 
 // -----------------------------------------------------------------------
 
+template <unsigned N>
+static std::array<float, N> createSineTable()
+{
+    std::array<float, N> tab;
+    for (size_t i = 0; i < N; ++i)
+        tab[i] = std::sin(2.0 * M_PI * i / N);
+    return tab;
+}
+
+// -----------------------------------------------------------------------
+
 static inline float triangle(float x) /* [0:1] → [-1:+1] */
 {
     return (x<0.5f) ? (-1+4*x) : (3-4*x);
+}
+
+static inline float sine(float x) /* [0:1] → [-1:+1] */
+{
+    constexpr unsigned N = 128;
+    std::array<float, N> tab = createSineTable<N>();
+    float index = x * N;
+    unsigned i1 = (unsigned)index;
+    float mu = index - i1;
+    return (1 - mu) * tab[i1 % N] + mu * tab[(i1 + 1) % N];
 }
 
 static inline float wrap(float x)
@@ -180,9 +201,26 @@ void PluginJuno::processWithinBufferLimit(const float* in, float* outL, float* o
     //     BBD_Line::hz_rate_for_delay(kLineAvgDelay + kLfoAmplitude * kLineDelayModRange, kDelayChipStages);
     ///
 
+    float lfoOutput[kBufferLimit];
+    switch ((int)fParams[pIdLfoType]) {
+    default:
+    case kLfoTriangle:
+        for (unsigned i = 0; i < frames; ++i) {
+            lfoOutput[i] = triangle(lfoPhase);
+            lfoPhase = wrap(lfoPhase + lfoIncr);
+        }
+        break;
+    case kLfoSine:
+        for (unsigned i = 0; i < frames; ++i) {
+            lfoOutput[i] = sine(lfoPhase);
+            lfoPhase = wrap(lfoPhase + lfoIncr);
+        }
+        break;
+    }
+
     for (unsigned i = 0; i < frames; ++i) {
-        float lfo1 = kLfoAmplitude * triangle(lfoPhase);
-        float lfo2 = kLfoAmplitude * triangle(wrap(lfoPhase + 0.5));
+        float lfo1 = kLfoAmplitude * lfoOutput[i];
+        float lfo2 = kLfoAmplitude * (1 - lfoOutput[i]);
 
         clock1[i] = samplePeriod *
             BBD_Line::hz_rate_for_delay(kLineAvgDelay + lfo1 * kLineDelayModRange, kDelayChipStages);

@@ -3,6 +3,7 @@
 
 enum Parameters {
     pIdBypass,
+    pIdLfoType,
     pIdLfoSpeed,
     pIdLfoAmplitude,
     pIdLineDelay,

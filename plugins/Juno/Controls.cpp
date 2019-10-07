@@ -43,13 +43,13 @@ void InitParameter(uint32_t index, Parameter& parameter)
         parameter.symbol = "wet";
         parameter.name = "Wet (dB) (Mix adjust)";
         parameter.unit = "dB";
-        parameter.ranges = ParameterRanges(0.0, -60.0, 0.0);
+        parameter.ranges = ParameterRanges(-6.0, -60.0, 0.0);
         break;
     case pIdDry:
         parameter.symbol = "dry";
         parameter.name = "Dry (dB) (Mix adjust)";
         parameter.unit = "dB";
-        parameter.ranges = ParameterRanges(0.0, -60.0, 0.0);
+        parameter.ranges = ParameterRanges(-6.0, -60.0, 0.0);
         break;
     }
 }

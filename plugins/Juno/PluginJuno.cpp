@@ -204,13 +204,13 @@ void PluginJuno::processWithinBufferLimit(const float* in, float* outL, float* o
     float lfoOutput[kBufferLimit];
     switch ((int)fParams[pIdLfoType]) {
     default:
-    case kLfoTriangle:
+    case lfoTriangle:
         for (unsigned i = 0; i < frames; ++i) {
             lfoOutput[i] = triangle(lfoPhase);
             lfoPhase = wrap(lfoPhase + lfoIncr);
         }
         break;
-    case kLfoSine:
+    case lfoSine:
         for (unsigned i = 0; i < frames; ++i) {
             lfoOutput[i] = sine(lfoPhase);
             lfoPhase = wrap(lfoPhase + lfoIncr);

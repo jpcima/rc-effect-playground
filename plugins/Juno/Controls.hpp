@@ -1,6 +1,13 @@
 #pragma once
 #include "DistrhoPlugin.hpp"
 
+
+enum LfoType {
+    lfoTriangle,
+    lfoSine,
+    lfoTypeCount
+};
+
 enum Parameters {
     pIdBypass,
     pIdLfoType,

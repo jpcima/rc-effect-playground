@@ -29,12 +29,12 @@ process = chorus with {
 
   /* (I + II) */
   III = environment {
-    lfoRate = 9.5; /* by ear and experiment */
+    lfoRate = 9.75; /* by ear and experiment */
     // found in documents and not matching the Juno60 sample:
     // 15.175 Hz (too fast), 8 Hz (too slow)
     lfoShape = 1; /* sine-like */
-    delaymin = 3.3e-3;
-    delaymax = 3.7e-3;
+    delaymin = 3.22e-3;
+    delaymax = 3.56e-3;
     stereo = 0;
   };
 
@@ -50,9 +50,11 @@ process = chorus with {
 
   /**/
   chorus(x) =
-    ba.if(enabled, x + (x : line(lfo1)), x),
-    ba.if(enabled, x + (x : line(lfo2)), x)
+    ba.if(enabled, mixAttenuation * (x + (x : line(lfo1))), x),
+    ba.if(enabled, mixAttenuation * (x + (x : line(lfo2))), x)
   with {
+    mixAttenuation = 1./sqrt(2.);
+
     /* Capacity of delay */
     delaycap = 10e-3; // seconds, must be >> delay time
     delaycapframes = int(ceil(delaycap * ma.SR)); // frames, rounded up

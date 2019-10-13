@@ -25,16 +25,15 @@
  */
 
 #include "PluginJuno.hpp"
-#include "bbd_filter.h"
-#include <cstring>
-#include <cmath>
+#include "chorus.cxx"
 
 START_NAMESPACE_DISTRHO
 
 // -----------------------------------------------------------------------
 
 PluginJuno::PluginJuno()
-    : Plugin(paramCount, presetCount, stateCount)
+    : Plugin(paramCount, presetCount, stateCount),
+      fChorus(new faustChorus)
 {
     sampleRateChanged(getSampleRate());
     if (presetCount > 0) {
@@ -44,9 +43,13 @@ PluginJuno::PluginJuno()
         for (unsigned i = 0; i < paramCount; ++i) {
             Parameter p;
             InitParameter(i, p);
-            fParams[i] = p.ranges.def;
+            setParameterValue(i, p.ranges.def);
         }
     }
+}
+
+PluginJuno::~PluginJuno()
+{
 }
 
 // -----------------------------------------------------------------------
@@ -73,28 +76,44 @@ void PluginJuno::initProgramName(uint32_t index, String& programName) {
   Optional callback to inform the plugin about a sample rate change.
 */
 void PluginJuno::sampleRateChanged(double newSampleRate) {
-    fSampleRate = newSampleRate;
-
-    for (BBD_Line &del : fDelays)
-        del.setup(newSampleRate, kDelayChipStages, bbd_fin_j60, bbd_fout_j60);
+    fChorus->instanceConstants(newSampleRate);
 }
 
 /**
   Get the current value of a parameter.
 */
 float PluginJuno::getParameterValue(uint32_t index) const {
-    DISTRHO_SAFE_ASSERT_RETURN(index < paramCount, 0);
+    float value;
 
-    return fParams[index];
+    switch (index) {
+    case pIdButtonI:
+        value = *fChorus->fControlChorusI;
+        break;
+    case pIdButtonII:
+        value = *fChorus->fControlChorusII;
+        break;
+    default:
+        value = 0;
+        DISTRHO_SAFE_ASSERT(false);
+    }
+
+    return value;
 }
 
 /**
   Change a parameter value.
 */
 void PluginJuno::setParameterValue(uint32_t index, float value) {
-    DISTRHO_SAFE_ASSERT_RETURN(index < paramCount,);
-
-    fParams[index] = value;
+    switch (index) {
+    case pIdButtonI:
+        *fChorus->fControlChorusI = value;
+        break;
+    case pIdButtonII:
+        *fChorus->fControlChorusII = value;
+        break;
+    default:
+        DISTRHO_SAFE_ASSERT(false);
+    }
 }
 
 /**
@@ -114,140 +133,13 @@ void PluginJuno::loadProgram(uint32_t index) {
 // Process
 
 void PluginJuno::activate() {
-    for (BBD_Line &del : fDelays)
-        del.clear();
+    fChorus->instanceClear();
 }
 
 
 
 void PluginJuno::run(const float** inputs, float** outputs, uint32_t frames) {
-    const float* in = inputs[0];
-    float* outL = outputs[0];
-    float* outR = outputs[1];
-
-    if (fParams[pIdBypass] > 0.5f) {
-        memcpy(outL, in, frames * sizeof(float));
-        memcpy(outR, in, frames * sizeof(float));
-        return;
-    }
-
-    uint32_t frameIndex = 0;
-    while (frameIndex < frames) {
-        uint32_t count = std::min(frames - frameIndex, (uint32_t)kBufferLimit);
-        processWithinBufferLimit(in + frameIndex, outL + frameIndex, outR + frameIndex, count);
-        frameIndex += count;
-    }
-}
-
-// -----------------------------------------------------------------------
-
-template <unsigned N>
-static std::array<float, N> createSineTable()
-{
-    std::array<float, N> tab;
-    for (size_t i = 0; i < N; ++i)
-        tab[i] = std::sin(2.0 * M_PI * i / N);
-    return tab;
-}
-
-// -----------------------------------------------------------------------
-
-static inline float triangle(float x) /* [0:1] → [-1:+1] */
-{
-    return (x<0.5f) ? (-1+4*x) : (3-4*x);
-}
-
-static inline float sine(float x) /* [0:1] → [-1:+1] */
-{
-    constexpr unsigned N = 128;
-    std::array<float, N> tab = createSineTable<N>();
-    float index = x * N;
-    unsigned i1 = (unsigned)index;
-    float mu = index - i1;
-    return (1 - mu) * tab[i1 % N] + mu * tab[(i1 + 1) % N];
-}
-
-static inline float wrap(float x)
-{
-    return x - (int)x;
-}
-
-void PluginJuno::processWithinBufferLimit(const float* in, float* outL, float* outR, uint32_t frames)
-{
-    /*XXX Delay characteristic from parameters, experiment only*/
-    const float kLineAvgDelay = fParams[pIdLineDelay] * 1e-3;
-    const float kLineDelayModRange = kLineAvgDelay * fParams[pIdDelayModAmount];
-
-    /*XXX LOF characteristic from parameters, experiment only*/
-    const float kLfoSpeed = fParams[pIdLfoSpeed];
-    const float kLfoAmplitude = fParams[pIdLfoAmplitude];
-
-    //--------------------------------------------------------------------------
-
-    const float samplePeriod = 1.0f / fSampleRate;
-    const float lfoIncr = kLfoSpeed * samplePeriod;
-    const float gainDry = std::pow(10.0f, fParams[pIdDry] * 0.05f);
-    const float gainWet = std::pow(10.0f, fParams[pIdWet] * 0.05f);
-
-    float lfoPhase = fLfoPhase;
-
-    float clock1[kBufferLimit];
-    float clock2[kBufferLimit];
-
-    ///
-    // float minClock = samplePeriod *
-    //     BBD_Line::hz_rate_for_delay(kLineAvgDelay - kLfoAmplitude * kLineDelayModRange, kDelayChipStages);
-    // float maxClock = samplePeriod *
-    //     BBD_Line::hz_rate_for_delay(kLineAvgDelay + kLfoAmplitude * kLineDelayModRange, kDelayChipStages);
-    ///
-
-    float lfoOutput[kBufferLimit];
-    switch ((int)fParams[pIdLfoType]) {
-    default:
-    case lfoTriangle:
-        for (unsigned i = 0; i < frames; ++i) {
-            lfoOutput[i] = triangle(lfoPhase);
-            lfoPhase = wrap(lfoPhase + lfoIncr);
-        }
-        break;
-    case lfoSine:
-        for (unsigned i = 0; i < frames; ++i) {
-            lfoOutput[i] = sine(lfoPhase);
-            lfoPhase = wrap(lfoPhase + lfoIncr);
-        }
-        break;
-    }
-
-    bool isFast = fParams[pIdFast] > 0.5f;
-
-    for (unsigned i = 0; i < frames; ++i) {
-        float lfo1 = kLfoAmplitude * lfoOutput[i];
-        float lfo1Invert = kLfoAmplitude * (1 - lfoOutput[i]);
-        float lfo2 = isFast ? lfo1 : lfo1Invert;
-
-        clock1[i] = samplePeriod *
-            BBD_Line::hz_rate_for_delay(kLineAvgDelay + lfo1 * kLineDelayModRange, kDelayChipStages);
-        clock2[i] = samplePeriod *
-            BBD_Line::hz_rate_for_delay(kLineAvgDelay + lfo2 * kLineDelayModRange, kDelayChipStages);
-
-        // clock1[i] = (0.5 * (maxClock + minClock)) + lfo1 * (0.5 * (maxClock - minClock));
-        // clock2[i] = (0.5 * (maxClock + minClock)) + lfo2 * (0.5 * (maxClock - minClock));
-
-        lfoPhase = wrap(lfoPhase + lfoIncr);
-    }
-
-    float delayed1[kBufferLimit];
-    float delayed2[kBufferLimit];
-
-    fDelays[0].process(frames, in, delayed1, clock1);
-    fDelays[1].process(frames, in, delayed2, clock2);
-
-    for (unsigned i = 0; i < frames; ++i) {
-        outL[i] = gainDry * in[i] + gainWet * delayed1[i];
-        outR[i] = gainDry * in[i] + gainWet * delayed2[i];
-    }
-
-    fLfoPhase = lfoPhase;
+    fChorus->compute(frames, const_cast<float**>(inputs), outputs);
 }
 
 // -----------------------------------------------------------------------

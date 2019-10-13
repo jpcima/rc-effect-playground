@@ -29,8 +29,9 @@
 
 #include "DistrhoPlugin.hpp"
 #include "Controls.hpp"
-#include "bbd_line.h"
-#include <array>
+#include <memory>
+
+class faustChorus;
 
 START_NAMESPACE_DISTRHO
 
@@ -39,6 +40,7 @@ START_NAMESPACE_DISTRHO
 class PluginJuno : public Plugin {
 public:
     PluginJuno();
+    ~PluginJuno();
 
 protected:
     // -------------------------------------------------------------------
@@ -104,43 +106,9 @@ protected:
     void run(const float**, float** outputs, uint32_t frames) override;
 
     // -------------------------------------------------------------------
-    void processWithinBufferLimit(const float* in, float* outL, float* outR, uint32_t frames);
-
-    // -------------------------------------------------------------------
 
 private:
-    float    fParams[paramCount];
-    double   fSampleRate;
-
-    float fLfoPhase = 0;
-    std::array<BBD_Line, 2> fDelays;
-
-    enum { kDelayChipStages = 256 }; /* see MN3009 */
-
-    enum { kBufferLimit = 256 }; /* maximum samples in one run */
-
-    // /* Chorus fixed constants (TODO set correct values; these from Dimension-D ratings) */
-    // static constexpr float kLineAvgDelay = 10e-3;
-    // static constexpr float kLineDelayModRange = 2e-3;
-
-    /* Chorus fixed constants (TODO set correct values; generic chorus ratings) */
-    // static constexpr float kLineAvgDelay = 35e-3;
-    // static constexpr float kLineDelayModRange = 20e-3;
-
-    /*
-      Juno 6
-      ======
-
-      BBDs: 2x MN3009
-
-      LFOs: 1LFO with three settings
-      * I = 100% amount, 0.4Hz, triangle
-      * II = 100% amount, 0.6Hz, triangle
-      * I + II = 25% amount, 8Hz, sine like
-     */
-
-    // static constexpr float kLfoSpeed = 0.4;
-    // static constexpr float kLfoAmplitude = 1.0;
+    std::unique_ptr<faustChorus> fChorus;
 
     DISTRHO_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginJuno)
 };

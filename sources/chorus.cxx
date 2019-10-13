@@ -22,12 +22,23 @@ class faustChorusImpl;
 static faustChorusExtra &getChorusExtra(faustChorusImpl &c);
 ///
 
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
 #include "chorus.dsp.cxx"
 
+#pragma GCC diagnostic pop
+
+///
 class faustChorus final : public faustChorusImpl, public faustObject::UI {
 public:
     faustChorus()
     {
+        instanceConstants(44100);
+        instanceResetUserInterface();
+        instanceClear();
+
         buildUserInterface(this);
 
         assert(fControlChorusI);
@@ -59,6 +70,7 @@ public:
             fControlChorusII = control;
             break;
         }
+        (void)value;
     }
 
     float *fControlChorusI = nullptr;

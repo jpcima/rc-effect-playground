@@ -12,13 +12,20 @@ public:
     class Meta {
     public:
         virtual ~Meta() {}
-        virtual void declare(const char *property, const char *value) {}
+        virtual void declare(const char *property, const char *value) {
+            (void)property;
+            (void)value;
+        }
     };
 
     class UI {
     public:
         virtual ~UI() {}
-        virtual void declare(float *control, const char *property, const char *value) {}
+        virtual void declare(float *control, const char *property, const char *value) {
+            (void)control;
+            (void)property;
+            (void)value;
+        }
 
         void openTabBox(...) {}
         void openHorizontalBox(...) {}

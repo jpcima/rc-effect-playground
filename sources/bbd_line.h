@@ -50,6 +50,14 @@ public:
     void process(unsigned n, float *inout, const float *clock);
 
     /**
+     * Process a single audio frame. (RT)
+     * @param input input sample
+     * @param clock clock sample
+     * @return output sample
+     */
+    float process_single(float input, float clock);
+
+    /**
      * Get the discretization of the input filter. (RT)
      * @return digital filter model
      */

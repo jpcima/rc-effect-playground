@@ -51,3 +51,10 @@ install-user: all
 # --------------------------------------------------------------
 
 .PHONY: all clean install install-user submodule libs plugins gen
+
+# --------------------------------------------------------------
+
+dsp:
+	faust -cn faustChorusImpl -scn faustObject -o sources/chorus.dsp.cxx sources/chorus.dsp
+
+.PHONY: dsp

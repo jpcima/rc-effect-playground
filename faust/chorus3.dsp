@@ -45,14 +45,15 @@ process = chorus with {
     delaymin = (I.delaymin, II.delaymin, III.delaymin) : selectByMode : smooth;
     delaymax = (I.delaymax, II.delaymax, III.delaymax) : selectByMode : smooth;
     stereo = (I.stereo, II.stereo, III.stereo) : selectByMode : smooth;
-    amount = (I.amount, II.amount, III.amount) : selectByMode : smooth;
   };
 
   /**/
   chorus(x) =
-    ba.if(enabled, mixAttenuation * (x + (x : line(lfo1))), x),
-    ba.if(enabled, mixAttenuation * (x + (x : line(lfo2))), x)
+    ((x, out1) : si.interpolate(enabled : smooth)),
+    ((x, out2) : si.interpolate(enabled : smooth))
   with {
+    out1 = x <: (_, line(lfo1)) :> + : *(mixAttenuation);
+    out2 = x <: (_, line(lfo2)) :> + : *(mixAttenuation);
     mixAttenuation = 1./sqrt(2.);
 
     /* Capacity of delay */
@@ -66,7 +67,7 @@ process = chorus with {
     };
     rawInverseLfo = 1. - rawLfo;
     lfo1 = rawLfo;
-    lfo2 = s.stereo * rawInverseLfo + (1. - s.stereo) * rawLfo;
+    lfo2 = (rawLfo, rawInverseLfo) : si.interpolate(s.stereo);
 
     /* Filter */
     delayLPF = fi.lowpass(4, 10000.); // a simulation of BBD antialising LPF at input and output

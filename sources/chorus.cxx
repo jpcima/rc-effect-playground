@@ -35,6 +35,7 @@ class faustChorus final : public faustChorusImpl, public faustObject::UI {
 public:
     faustChorus()
     {
+        classInit(44100);
         instanceConstants(44100);
         instanceResetUserInterface();
         instanceClear();

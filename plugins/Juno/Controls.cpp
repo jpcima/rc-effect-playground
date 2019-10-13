@@ -9,12 +9,12 @@ void InitParameter(uint32_t index, Parameter& parameter)
     switch (index) {
     case pIdButtonI:
         parameter.symbol = "I";
-        parameter.name = "I";
+        parameter.name = "Chorus (I)";
         parameter.hints |= kParameterIsBoolean|kParameterIsInteger;
         break;
     case pIdButtonII:
         parameter.symbol = "II";
-        parameter.name = "II";
+        parameter.name = "Chorus (II)";
         parameter.hints |= kParameterIsBoolean|kParameterIsInteger;
         break;
     }

@@ -28,8 +28,10 @@
 #define DISTRHO_PLUGIN_INFO_H
 
 #define DISTRHO_PLUGIN_BRAND "example.com"
-#define DISTRHO_PLUGIN_NAME  "Juno"
+#define DISTRHO_PLUGIN_NAME  "Juno 60 Chorus"
 #define DISTRHO_PLUGIN_URI   "https://example.com/plugins/juno"
+
+#define DISTRHO_PLUGIN_LV2_CATEGORY "lv2:ChorusPlugin"
 
 #define DISTRHO_PLUGIN_HAS_UI        0
 #define DISTRHO_UI_USE_NANOVG        0

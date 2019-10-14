@@ -3,7 +3,7 @@
 # This scripts extracts instantaneous delay times from a sound sample of
 # chorused sawtooth.
 #
-# TODO it doesn't return precise output, check for a way to improve it.
+# TODO improve the quality of detection
 #
 # Usage example: analyze.py juno60-1.wav
 #
@@ -15,54 +15,24 @@ import sys
 def process_channel(data, samplerate):
     result = []
 
-    # TODO tweak me, the reliability of the peak detector
-    peaks, props = scipy.signal.find_peaks(data, width=60)
+    # locate peak positions found within neighborhoods of certain widths
+    # TODO should express the width in time units, new input recordings having varying SR
+    peaks, props = scipy.signal.find_peaks(data, width=20)
 
     count = len(peaks)
 
-    # peak index which is analyzed currently
     nth = 0
-    # index of 'top' peak, the edge of the sawtooth of non-delayed signal
-    top = -1
-    # index of top peaks of 1 or 2 delay images (if 2 delays have near peaks
-    # at particular instants, can't distinguish them, so it will have 1)
-    sub = []
-    # the height over which a peak is taken to be from the main signal,
-    # not one of its delays
-    height_thr = 0.1
+    while nth < count - 1:
+        pos1 = peaks[nth]
+        pos2 = peaks[nth + 1]
 
-    while nth < count:
-        pos = peaks[nth]
-        height = data[pos]
+        # expect to find a high peak, and then a lower peak immediately following
 
-        if height > height_thr:
-            # we will enter analysis of a new period
-
-            if top != -1:
-                # proceed to end analyzing the former
-                nsub = len(sub)
-                if nsub > 2:
-                    sys.stderr.write('Anomaly: too many delay peaks found; try readjusting. (%s: %s)\n' % (peaks[top], list(map(lambda x: peaks[x], sub))))
-                elif nsub == 0:
-                    pass
-                    #sys.stderr.write('Anomaly: no delay peaks found; try readjusting. (%s)\n' % (peaks[top]))
-                else:
-                    if nsub == 1:
-                        # they were too close of each other; record them as equal
-                        sub = [sub[0], sub[0]]
-                    result.append((peaks[top] / samplerate,
-                                   (peaks[sub[0]] - peaks[top]) / samplerate,
-                                   (peaks[sub[1]] - peaks[top]) / samplerate))
-
-            # proceed to start analyzing next period
-            top = nth
-            sub = []
-
+        if data[pos1] < data[pos2]:
+            nth += 1
         else:
-            # it's a delay image of a main signal
-            sub.append(nth)
-
-        nth += 1
+            result.append((pos1 / samplerate, (pos2 - pos1) / samplerate))
+            nth += 2
 
     return result
 
@@ -88,6 +58,6 @@ if __name__ == '__main__':
         sys.stderr.write('Channel %d: found %d results\n' % (i + 1, len(delays[i])))
 
         f = open('channel%d.dat' % (i + 1), 'w')
-        for (t, d1, d2) in delays[i]:
-            f.write(('%e %e %e\n') % (t, d1, d2))
+        for (t, d1) in delays[i]:
+            f.write(('%e %e\n') % (t, d1))
         f.close()

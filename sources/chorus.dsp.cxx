@@ -275,8 +275,8 @@ class faustChorusImpl : public faustObject {
 		float fSlow1 = (fConst2 * float((iSlow0 != 0)));
 		int iSlow2 = (iSlow0 + -1);
 		int iSlow3 = (iSlow2 >= 2);
-		float fSlow4 = (fConst2 * (iSlow3?0.00322000007f:0.00165999995f));
-		float fSlow5 = (fConst2 * (iSlow3?0.0035600001f:0.00535000023f));
+		float fSlow4 = (fConst2 * (iSlow3?0.00322000007f:0.00153999997f));
+		float fSlow5 = (fConst2 * (iSlow3?0.0035600001f:0.0051500001f));
 		float fSlow6 = (fConst2 * float((iSlow3?1:0)));
 		float fSlow7 = (fConst2 * (iSlow3?9.75f:((iSlow2 >= 1)?0.862999976f:0.513000011f)));
 		float fSlow8 = (fConst2 * float((iSlow3?0:1)));

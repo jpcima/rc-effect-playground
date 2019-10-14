@@ -13,8 +13,8 @@ process = chorus with {
   I = environment {
     lfoRate = 0.513;
     lfoShape = 0; /* triangle */
-    delaymin = 1.66e-3;
-    delaymax = 5.35e-3;
+    delaymin = 1.54e-3;
+    delaymax = 5.15e-3;
     stereo = 1;
   };
 
@@ -22,8 +22,8 @@ process = chorus with {
   II = environment {
     lfoRate = 0.863;
     lfoShape = 0; /* triangle */
-    delaymin = 1.66e-3;
-    delaymax = 5.35e-3;
+    delaymin = 1.54e-3;
+    delaymax = 5.15e-3;
     stereo = 1;
   };
 

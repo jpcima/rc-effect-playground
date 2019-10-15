@@ -52,10 +52,8 @@ process = chorus with {
     ((x, out1) : si.interpolate(enabled : smooth)),
     ((x, out2) : si.interpolate(enabled : smooth))
   with {
-    out1 = x <: (_, delayModel.line1(lfo1 : delayAt)) :> + : *(mixAttenuation);
-    out2 = x <: (_, delayModel.line2(lfo2 : delayAt)) :> + : *(mixAttenuation);
-    mixAttenuation = 1./sqrt(2.);
-
+    out1 = x <: (*(0.83), delayModel.line1(lfo1 : delayAt)) :> +;
+    out2 = x <: (*(0.83), delayModel.line2(lfo2 : delayAt)) :> +;
 
     /* Delay model */
     delayModel = analogDelayModel;

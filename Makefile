@@ -17,6 +17,7 @@ libs:
 
 plugins: libs
 	$(MAKE) all -C plugins/Juno
+	$(MAKE) all -C plugins/JunoAdvanced
 
 ifneq ($(CROSS_COMPILING),true)
 gen: plugins dpf/utils/lv2_ttl_generator
@@ -40,13 +41,16 @@ endif
 clean:
 	$(MAKE) clean -C dpf/utils/lv2-ttl-generator
 	$(MAKE) clean -C plugins/Juno
+	$(MAKE) clean -C plugins/JunoAdvanced
 	rm -rf bin build
 
 install: all
 	$(MAKE) install -C plugins/Juno
+	$(MAKE) install -C plugins/JunoAdvanced
 
 install-user: all
 	$(MAKE) install-user -C plugins/Juno
+	$(MAKE) install-user -C plugins/JunoAdvanced
 
 # --------------------------------------------------------------
 
@@ -56,5 +60,6 @@ install-user: all
 
 dsp:
 	faust -cn faustChorusImpl -scn faustObject -o sources/chorus.dsp.cxx sources/chorus.dsp
+	faust -cn faustChorusAdvancedImpl -scn faustObject -o sources/chorus_advanced.dsp.cxx sources/chorus_advanced.dsp
 
 .PHONY: dsp

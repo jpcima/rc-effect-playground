@@ -55,7 +55,7 @@ static const Preset factoryPresets[] = {
         {
             0.0,   // bypass
             8.75,  // lfo_rate
-            0.0,   // lfo_shape
+            1.0,   // lfo_shape
             0.0,   // lfo_phase
             3.22,  // delay_domain1
             3.56,  // delay_domain2

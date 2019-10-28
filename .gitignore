@@ -18,4 +18,10 @@ bin/juno-ladspa.*
 bin/juno-dssi.*
 bin/juno-vst.*
 bin/juno.lv2/
+bin/juno_advanced
+bin/juno_advanced.exe
+bin/juno_advanced-ladspa.*
+bin/juno_advanced-dssi.*
+bin/juno_advanced-vst.*
+bin/juno_advanced.lv2/
 build/

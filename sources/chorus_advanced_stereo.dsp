@@ -15,7 +15,7 @@ with {
   in(0/*LEFT*/) = xLeft;
   in(1/*RIGHT*/) = xRight;
 
-  out(n) = lineMono(n) + lineCrossover;
+  out(n) = (lineMono(n) + lineCrossover) : stereoDownMix;
 
   lineMono(n) = in(n) : lineMixed(n);
   lineCrossover = (xLeft + xRight) : stereoDownMix : lineMixed(2/*CROSS*/);

@@ -418,12 +418,12 @@ class faustChorusAdvancedStereoImpl : public faustObject {
 			float fTemp19 = ftbl0faustChorusAdvancedStereoImplSIG0[iTemp18];
 			float fTemp20 = ftbl1faustChorusAdvancedStereoImplSIG1[iTemp18];
 			float fTemp21 = float(AnalogDelay3(float((fRec2[0] + (fTemp5 * ((fRec4[0] < 0.5f)?((fTemp17 * fTemp19) + (fTemp16 * fTemp20)):((fTemp9 * fTemp19) + (fRec7[0] * fTemp20)))))), float((0.707106769f * fTemp3))));
-			output0[i] = FAUSTFLOAT(((fTemp0 * (fTemp4 + ((0.829850793f * fTemp1) + (fRec1[0] * (float(AnalogDelay1(float((fRec2[0] + (fTemp5 * ((fTemp8 < 0.5f)?((fTemp17 * fTemp14) + (fTemp16 * fTemp15)):((fTemp9 * fTemp14) + (fRec7[0] * fTemp15)))))), float(fTemp1))) + fTemp21))))) + (fRec0[0] * fTemp1)));
+			output0[i] = FAUSTFLOAT(((0.707106769f * (fTemp0 * (fTemp4 + ((0.829850793f * fTemp1) + (fRec1[0] * (float(AnalogDelay1(float((fRec2[0] + (fTemp5 * ((fTemp8 < 0.5f)?((fTemp17 * fTemp14) + (fTemp16 * fTemp15)):((fTemp9 * fTemp14) + (fRec7[0] * fTemp15)))))), float(fTemp1))) + fTemp21)))))) + (fRec0[0] * fTemp1)));
 			float fTemp22 = (fRec4[0] + (1.0f - (fRec6[0] + float(int((fRec4[0] + (1.0f - fRec6[0])))))));
 			int iTemp23 = (int((65536.0f * fTemp22)) % 65536);
 			float fTemp24 = ftbl0faustChorusAdvancedStereoImplSIG0[iTemp23];
 			float fTemp25 = ftbl1faustChorusAdvancedStereoImplSIG1[iTemp23];
-			output1[i] = FAUSTFLOAT(((fTemp0 * ((0.829850793f * fTemp2) + (fTemp4 + (fRec1[0] * (fTemp21 + float(AnalogDelay2(float((fRec2[0] + (fTemp5 * ((fTemp22 < 0.5f)?((fTemp17 * fTemp24) + (fTemp16 * fTemp25)):((fTemp9 * fTemp24) + (fRec7[0] * fTemp25)))))), float(fTemp2)))))))) + (fRec0[0] * fTemp2)));
+			output1[i] = FAUSTFLOAT(((0.707106769f * (fTemp0 * ((0.829850793f * fTemp2) + (fTemp4 + (fRec1[0] * (fTemp21 + float(AnalogDelay2(float((fRec2[0] + (fTemp5 * ((fTemp22 < 0.5f)?((fTemp17 * fTemp24) + (fTemp16 * fTemp25)):((fTemp9 * fTemp24) + (fRec7[0] * fTemp25)))))), float(fTemp2))))))))) + (fRec0[0] * fTemp2)));
 			fRec0[1] = fRec0[0];
 			fRec1[1] = fRec1[0];
 			fRec2[1] = fRec2[0];

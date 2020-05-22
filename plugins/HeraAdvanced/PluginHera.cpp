@@ -1,9 +1,9 @@
 /*
- * Juno audio effect based on DISTRHO Plugin Framework (DPF)
+ * Hera audio effect based on DISTRHO Plugin Framework (DPF)
  *
  * SPDX-License-Identifier: MIT
  *
- * Copyright (C) 2019 Joe Doe <joe.doe@example.com>
+ * Copyright (C) 2019-2020 J.P. Cimalando <https://jpcima.sdf1.org/>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -24,14 +24,14 @@
  * IN THE SOFTWARE.
  */
 
-#include "PluginJuno.hpp"
+#include "PluginHera.hpp"
 #include "chorus_advanced.cxx"
 
 START_NAMESPACE_DISTRHO
 
 // -----------------------------------------------------------------------
 
-PluginJuno::PluginJuno()
+PluginHera::PluginHera()
     : Plugin(paramCount, presetCount, stateCount),
       fChorus(new faustChorusAdvanced)
 {
@@ -48,14 +48,14 @@ PluginJuno::PluginJuno()
     }
 }
 
-PluginJuno::~PluginJuno()
+PluginHera::~PluginHera()
 {
 }
 
 // -----------------------------------------------------------------------
 // Init
 
-void PluginJuno::initParameter(uint32_t index, Parameter& parameter) {
+void PluginHera::initParameter(uint32_t index, Parameter& parameter) {
     InitParameter(index, parameter);
 }
 
@@ -63,7 +63,7 @@ void PluginJuno::initParameter(uint32_t index, Parameter& parameter) {
   Set the name of the program @a index.
   This function will be called once, shortly after the plugin is created.
 */
-void PluginJuno::initProgramName(uint32_t index, String& programName) {
+void PluginHera::initProgramName(uint32_t index, String& programName) {
     DISTRHO_SAFE_ASSERT_RETURN(index < presetCount,);
 
     programName = factoryPresets[index].name;
@@ -75,14 +75,14 @@ void PluginJuno::initProgramName(uint32_t index, String& programName) {
 /**
   Optional callback to inform the plugin about a sample rate change.
 */
-void PluginJuno::sampleRateChanged(double newSampleRate) {
+void PluginHera::sampleRateChanged(double newSampleRate) {
     fChorus->instanceConstants(newSampleRate);
 }
 
 /**
   Get the current value of a parameter.
 */
-float PluginJuno::getParameterValue(uint32_t index) const {
+float PluginHera::getParameterValue(uint32_t index) const {
     float value;
 
     switch (index) {
@@ -118,7 +118,7 @@ float PluginJuno::getParameterValue(uint32_t index) const {
 /**
   Change a parameter value.
 */
-void PluginJuno::setParameterValue(uint32_t index, float value) {
+void PluginHera::setParameterValue(uint32_t index, float value) {
     switch (index) {
     case pIdBypass:
         *fChorus->fControlBypass = value;
@@ -151,7 +151,7 @@ void PluginJuno::setParameterValue(uint32_t index, float value) {
   The host may call this function from any context,
   including realtime processing.
 */
-void PluginJuno::loadProgram(uint32_t index) {
+void PluginHera::loadProgram(uint32_t index) {
     DISTRHO_SAFE_ASSERT_RETURN(index < presetCount,);
 
     for (int i=0; i < paramCount; i++) {
@@ -162,20 +162,20 @@ void PluginJuno::loadProgram(uint32_t index) {
 // -----------------------------------------------------------------------
 // Process
 
-void PluginJuno::activate() {
+void PluginHera::activate() {
     fChorus->instanceClear();
 }
 
 
 
-void PluginJuno::run(const float** inputs, float** outputs, uint32_t frames) {
+void PluginHera::run(const float** inputs, float** outputs, uint32_t frames) {
     fChorus->compute(frames, const_cast<float**>(inputs), outputs);
 }
 
 // -----------------------------------------------------------------------
 
 Plugin* createPlugin() {
-    return new PluginJuno();
+    return new PluginHera();
 }
 
 // -----------------------------------------------------------------------

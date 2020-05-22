@@ -1,9 +1,9 @@
 /*
- * Juno audio effect based on DISTRHO Plugin Framework (DPF)
+ * Hera Chorus audio effect based on DISTRHO Plugin Framework (DPF)
  *
  * SPDX-License-Identifier: MIT
  *
- * Copyright (C) 2019 Joe Doe <joe.doe@example.com>
+ * Copyright (C) 2019-2020 J.P. Cimalando <https://jpcima.sdf1.org/>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -27,9 +27,9 @@
 #ifndef DISTRHO_PLUGIN_INFO_H
 #define DISTRHO_PLUGIN_INFO_H
 
-#define DISTRHO_PLUGIN_BRAND "example.com"
-#define DISTRHO_PLUGIN_NAME  "Juno Advanced Chorus"
-#define DISTRHO_PLUGIN_URI   "https://example.com/plugins/juno-advanced"
+#define DISTRHO_PLUGIN_BRAND "jpcima.sdf1.org"
+#define DISTRHO_PLUGIN_NAME  "Hera Chorus"
+#define DISTRHO_PLUGIN_URI   "http://jpcima.sdf1.org/lv2/hera-chorus"
 
 #define DISTRHO_PLUGIN_LV2_CATEGORY "lv2:ChorusPlugin"
 

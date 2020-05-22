@@ -43,7 +43,7 @@ endif
 # --------------------------------------------------------------
 # Project name, used for binaries
 
-NAME = juno_advanced_stereo
+NAME = hera_advanced_stereo
 
 # --------------------------------------------------------------
 # Plugin types to build
@@ -58,7 +58,7 @@ BUILD_LADSPA ?= true
 # Files to build
 
 FILES_DSP = \
-	PluginJuno.cpp \
+	PluginHera.cpp \
 	Controls.cpp \
 	sources/bbd_filter.cpp \
 	sources/bbd_line.cpp

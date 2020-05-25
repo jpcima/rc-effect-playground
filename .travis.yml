@@ -21,16 +21,16 @@ matrix:
       before_install:
         - sudo apt-get update -qq
       install:
-        - sudo apt-get install checkinstall libcairo2-dev
+        - sudo apt-get install checkinstall python3-numpy python3-pil libgl1-mesa-dev libx11-dev
       script:
         - bash .travis/script-linux.sh
-        - cp -drfv bin juno-chorus-"$_BUILD"
-        - rm -f juno-chorus-"$_BUILD"/README
+        - cp -drfv bin hera-chorus-"$_BUILD"
+        - rm -f hera-chorus-"$_BUILD"/README
         - install -d release
-        - zip -9 -r release/juno-chorus-"$_BUILD".zip juno-chorus-"$_BUILD"
+        - zip -9 -r release/hera-chorus-"$_BUILD".zip hera-chorus-"$_BUILD"
         - echo "A classic analog phaser effect" > description-pak
-        - sudo checkinstall --type=debian --install=no --default --pkgname=juno-chorus --pkgversion="`git describe --abbrev=0 | sed 's/^v//'``git log -n 1 --pretty=format:"+%cd~git%h" --date=short master | sed 's/-//g'`" --pkgarch=amd64 --pkgrelease=0jpc1 --pkglicense=BSL-1.0 --pkggroup=sound --maintainer="jp-dev@inbox.ru" --nodoc
-        - sudo mv -f *.deb release/juno-chorus-"$_BUILD".deb
+        - sudo checkinstall --type=debian --install=no --default --pkgname=hera-chorus --pkgversion="`git describe --abbrev=0 | sed 's/^v//'``git log -n 1 --pretty=format:"+%cd~git%h" --date=short master | sed 's/-//g'`" --pkgarch=amd64 --pkgrelease=0jpc1 --pkglicense=MIT --pkggroup=sound --maintainer="jp-dev@inbox.ru" --nodoc
+        - sudo mv -f *.deb release/hera-chorus-"$_BUILD".deb
 
 before_script:
   - sed -i~ 's%/usr/local%/usr%g' plugins/*/Makefile
@@ -55,4 +55,4 @@ deploy:
 
 env:
   global:
-    secure: QvOjd4Pb2TchjtVmjx4Ewle7OZSUCwRXzmyMTXjzg12lROcXIlVag3Oc85/7PcA/L87wzDrhxmGWdoU1tJA4Muprf/OtQMGEq65Pyj2shV7O3deErF0LJzqG83rQe2ZtUdADpuRNrLWGCgj5VWaH9Dkti455GK+6iBTywkKZRZsRRbcw16jHIPNYO0falPkqGSw5TUIcC5u8TxxlPmtqlq5a0yEc+iHvOm+53HBMqFjNIb7w3KQ+6gzKZnLhlqAmrtfnuMrnQbIKN5qnVMomyCMWDXs+lZY+XFQf1PI32TohTDrdg2aLwa80Ny1DPJw8+if8n/T3v3Pa0KwsVEutAGgYD4OMJ5BPJReCQxldIRI72x6votGc89GSz4Fqpddt/oB9W9QqG1uJUzeCVwDeIxkTuyzDX7+wOBL3LUziLvcnpy2Kk5O9tDre3M0nm5Nlij0tqqOi5VAIFfUxTjyhm7JFV15ZRz9z/s7DlEDvQjRu6NhutrwR/YHQg29eIyuqoQ3EWHyRGcLHXj2dCKDGAymQINpoQ/eq9Wi508WLp2h1WkqyEqDAPHwHS9VsE2O+Fd95wRyWMXFUWVfdAz65soVplZpnuFlEvjAvYGQhBnGrkHvq3TsZINdkC2VUI6yDhItvHwhp2JvTN/h5KeTLsakAYbxOvazCUk8HGpUYH3U=
+    - secure: QvOjd4Pb2TchjtVmjx4Ewle7OZSUCwRXzmyMTXjzg12lROcXIlVag3Oc85/7PcA/L87wzDrhxmGWdoU1tJA4Muprf/OtQMGEq65Pyj2shV7O3deErF0LJzqG83rQe2ZtUdADpuRNrLWGCgj5VWaH9Dkti455GK+6iBTywkKZRZsRRbcw16jHIPNYO0falPkqGSw5TUIcC5u8TxxlPmtqlq5a0yEc+iHvOm+53HBMqFjNIb7w3KQ+6gzKZnLhlqAmrtfnuMrnQbIKN5qnVMomyCMWDXs+lZY+XFQf1PI32TohTDrdg2aLwa80Ny1DPJw8+if8n/T3v3Pa0KwsVEutAGgYD4OMJ5BPJReCQxldIRI72x6votGc89GSz4Fqpddt/oB9W9QqG1uJUzeCVwDeIxkTuyzDX7+wOBL3LUziLvcnpy2Kk5O9tDre3M0nm5Nlij0tqqOi5VAIFfUxTjyhm7JFV15ZRz9z/s7DlEDvQjRu6NhutrwR/YHQg29eIyuqoQ3EWHyRGcLHXj2dCKDGAymQINpoQ/eq9Wi508WLp2h1WkqyEqDAPHwHS9VsE2O+Fd95wRyWMXFUWVfdAz65soVplZpnuFlEvjAvYGQhBnGrkHvq3TsZINdkC2VUI6yDhItvHwhp2JvTN/h5KeTLsakAYbxOvazCUk8HGpUYH3U=

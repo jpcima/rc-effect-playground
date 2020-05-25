@@ -7,13 +7,13 @@ void InitParameter(uint32_t index, Parameter& parameter)
     parameter.hints = kParameterIsAutomable;
 
     switch (index) {
-    case pIdButtonI:
-        parameter.symbol = "I";
+    case paramTypeI:
+        parameter.symbol = "type_1";
         parameter.name = "Chorus (I)";
         parameter.hints |= kParameterIsBoolean|kParameterIsInteger;
         break;
-    case pIdButtonII:
-        parameter.symbol = "II";
+    case paramTypeII:
+        parameter.symbol = "type_2";
         parameter.name = "Chorus (II)";
         parameter.hints |= kParameterIsBoolean|kParameterIsInteger;
         break;

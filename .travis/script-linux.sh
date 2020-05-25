@@ -36,4 +36,4 @@ export LDFLAGS="-m$_BITS"
 # ---------------------------------------------------------------------------------------------------------------------
 # build the plugin
 
-LINUX=true make $MAKE_ARGS
+LINUX=true make -j$(nproc) $MAKE_ARGS

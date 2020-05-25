@@ -16,9 +16,9 @@ submodules:
 libs:
 
 plugins: libs
-	$(MAKE) all -C plugins/Juno
-	$(MAKE) all -C plugins/JunoAdvanced
-	$(MAKE) all -C plugins/JunoAdvancedStereo
+	$(MAKE) all -C plugins/Hera
+	$(MAKE) all -C plugins/HeraAdvanced
+	$(MAKE) all -C plugins/HeraAdvancedStereo
 
 ifneq ($(CROSS_COMPILING),true)
 gen: plugins dpf/utils/lv2_ttl_generator
@@ -41,20 +41,20 @@ endif
 
 clean:
 	$(MAKE) clean -C dpf/utils/lv2-ttl-generator
-	$(MAKE) clean -C plugins/Juno
-	$(MAKE) clean -C plugins/JunoAdvanced
-	$(MAKE) clean -C plugins/JunoAdvancedStereo
+	$(MAKE) clean -C plugins/Hera
+	$(MAKE) clean -C plugins/HeraAdvanced
+	$(MAKE) clean -C plugins/HeraAdvancedStereo
 	rm -rf bin build
 
 install: all
-	$(MAKE) install -C plugins/Juno
-	$(MAKE) install -C plugins/JunoAdvanced
-	$(MAKE) install -C plugins/JunoAdvancedStereo
+	$(MAKE) install -C plugins/Hera
+	$(MAKE) install -C plugins/HeraAdvanced
+	$(MAKE) install -C plugins/HeraAdvancedStereo
 
 install-user: all
-	$(MAKE) install-user -C plugins/Juno
-	$(MAKE) install-user -C plugins/JunoAdvanced
-	$(MAKE) install-user -C plugins/JunoAdvancedStereo
+	$(MAKE) install-user -C plugins/Hera
+	$(MAKE) install-user -C plugins/HeraAdvanced
+	$(MAKE) install-user -C plugins/HeraAdvancedStereo
 
 # --------------------------------------------------------------
 

@@ -1,9 +1,9 @@
 /*
- * Juno audio effect based on DISTRHO Plugin Framework (DPF)
+ * Hera audio effect based on DISTRHO Plugin Framework (DPF)
  *
  * SPDX-License-Identifier: MIT
  *
- * Copyright (C) 2019 Joe Doe <joe.doe@example.com>
+ * Copyright (C) 2019-2020 J.P. Cimalando <https://jpcima.sdf1.org/>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -24,8 +24,8 @@
  * IN THE SOFTWARE.
  */
 
-#ifndef PLUGIN_JUNO_H
-#define PLUGIN_JUNO_H
+#ifndef PLUGIN_HERA_H
+#define PLUGIN_HERA_H
 
 #include "DistrhoPlugin.hpp"
 #include "Controls.hpp"
@@ -37,29 +37,29 @@ START_NAMESPACE_DISTRHO
 
 // -----------------------------------------------------------------------
 
-class PluginJuno : public Plugin {
+class PluginHera : public Plugin {
 public:
-    PluginJuno();
-    ~PluginJuno();
+    PluginHera();
+    ~PluginHera();
 
 protected:
     // -------------------------------------------------------------------
     // Information
 
     const char* getLabel() const noexcept override {
-        return "Juno Advanced";
+        return "Hera Advanced Chorus";
     }
 
     const char* getDescription() const override {
-        return "Chorus";
+        return "Advanced chorus effect modelling analog BBD devices";
     }
 
     const char* getMaker() const noexcept override {
-        return "example.com";
+        return "jpcima.sdf1.org";
     }
 
     const char* getHomePage() const override {
-        return "https://example.com/plugins/juno";
+        return "http://jpcima.sdf1.org/lv2/hera-advanced-chorus";
     }
 
     const char* getLicense() const noexcept override {
@@ -76,7 +76,7 @@ protected:
     //
     // Get a proper plugin UID and fill it in here!
     int64_t getUniqueId() const noexcept override {
-        return d_cconst('a', 'b', 'c', 'd');
+        return d_cconst('H', 'e', 'r', 'A');
     }
 
     // -------------------------------------------------------------------
@@ -110,11 +110,11 @@ protected:
 private:
     std::unique_ptr<faustChorusAdvanced> fChorus;
 
-    DISTRHO_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginJuno)
+    DISTRHO_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginHera)
 };
 
 // -----------------------------------------------------------------------
 
 END_NAMESPACE_DISTRHO
 
-#endif  // #ifndef PLUGIN_JUNO_H
+#endif  // #ifndef PLUGIN_HERA_H

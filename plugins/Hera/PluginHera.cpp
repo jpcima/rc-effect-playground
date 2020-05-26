@@ -86,10 +86,10 @@ float PluginHera::getParameterValue(uint32_t index) const {
     float value;
 
     switch (index) {
-    case pIdButtonI:
+    case paramTypeI:
         value = *fChorus->fControlChorusI;
         break;
-    case pIdButtonII:
+    case paramTypeII:
         value = *fChorus->fControlChorusII;
         break;
     default:
@@ -105,10 +105,10 @@ float PluginHera::getParameterValue(uint32_t index) const {
 */
 void PluginHera::setParameterValue(uint32_t index, float value) {
     switch (index) {
-    case pIdButtonI:
+    case paramTypeI:
         *fChorus->fControlChorusI = value;
         break;
-    case pIdButtonII:
+    case paramTypeII:
         *fChorus->fControlChorusII = value;
         break;
     default:

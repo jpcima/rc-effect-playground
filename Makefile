@@ -13,7 +13,8 @@ all: libs plugins gen
 submodules:
 	git submodule update --init --recursive
 
-libs:
+libs: artwork
+	$(MAKE) -C dpf/dgl ../build/libdgl-opengl.a
 
 plugins: libs
 	$(MAKE) all -C plugins/Hera
@@ -39,12 +40,28 @@ endif
 
 # --------------------------------------------------------------
 
+dsp:
+	faust -cn faustChorusImpl -scn faustObject -o sources/chorus.dsp.cxx sources/chorus.dsp
+	faust -cn faustChorusAdvancedImpl -scn faustObject -o sources/chorus_advanced.dsp.cxx sources/chorus_advanced.dsp
+	faust -cn faustChorusAdvancedStereoImpl -scn faustObject -o sources/chorus_advanced_stereo.dsp.cxx sources/chorus_advanced_stereo.dsp
+
+# --------------------------------------------------------------
+
+artwork:
+	$(MAKE) artwork -C plugins/Hera
+
+# --------------------------------------------------------------
+
 clean:
+	$(MAKE) clean -C dpf/dgl
 	$(MAKE) clean -C dpf/utils/lv2-ttl-generator
 	$(MAKE) clean -C plugins/Hera
 	$(MAKE) clean -C plugins/HeraAdvanced
 	$(MAKE) clean -C plugins/HeraAdvancedStereo
 	rm -rf bin build
+
+dist-clean: clean
+	$(MAKE) dist-clean -C plugins/Hera
 
 install: all
 	$(MAKE) install -C plugins/Hera
@@ -58,13 +75,4 @@ install-user: all
 
 # --------------------------------------------------------------
 
-.PHONY: all clean install install-user submodule libs plugins gen
-
-# --------------------------------------------------------------
-
-dsp:
-	faust -cn faustChorusImpl -scn faustObject -o sources/chorus.dsp.cxx sources/chorus.dsp
-	faust -cn faustChorusAdvancedImpl -scn faustObject -o sources/chorus_advanced.dsp.cxx sources/chorus_advanced.dsp
-	faust -cn faustChorusAdvancedStereoImpl -scn faustObject -o sources/chorus_advanced_stereo.dsp.cxx sources/chorus_advanced_stereo.dsp
-
-.PHONY: dsp
+.PHONY: all artwork clean dist-clean dsp install install-user submodule libs plugins gen

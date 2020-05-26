@@ -2,8 +2,8 @@
 #include "DistrhoPlugin.hpp"
 
 enum Parameters {
-    pIdButtonI,
-    pIdButtonII,
+    paramTypeI,
+    paramTypeII,
     paramCount
 };
 

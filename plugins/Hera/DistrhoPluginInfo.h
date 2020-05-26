@@ -33,7 +33,7 @@
 
 #define DISTRHO_PLUGIN_LV2_CATEGORY "lv2:ChorusPlugin"
 
-#define DISTRHO_PLUGIN_HAS_UI        0
+#define DISTRHO_PLUGIN_HAS_UI        1
 #define DISTRHO_UI_USE_NANOVG        0
 
 #define DISTRHO_PLUGIN_IS_RT_SAFE       1

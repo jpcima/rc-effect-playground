@@ -16,8 +16,8 @@ struct faustChorusExtra {
 };
 
 /// Foreign `ffunction` macros invoked from Faust code
-#define AnalogDelay1(d, x) (getChorusExtra(*this).fLine1.process_single(x, BBD_Line::hz_rate_for_delay(d, faustChorusExtra::NumStages) * (1.0f/fSamplingFreq)))
-#define AnalogDelay2(d, x) (getChorusExtra(*this).fLine2.process_single(x, BBD_Line::hz_rate_for_delay(d, faustChorusExtra::NumStages) * (1.0f/fSamplingFreq)))
+#define AnalogDelay1(d, x) (getChorusExtra(*this).fLine1.process_single(x, BBD_Line::hz_rate_for_delay(d, faustChorusExtra::NumStages) * (1.0f/fSampleRate)))
+#define AnalogDelay2(d, x) (getChorusExtra(*this).fLine2.process_single(x, BBD_Line::hz_rate_for_delay(d, faustChorusExtra::NumStages) * (1.0f/fSampleRate)))
 class faustChorusImpl;
 static faustChorusExtra &getChorusExtra(faustChorusImpl &c);
 ///

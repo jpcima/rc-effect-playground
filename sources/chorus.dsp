@@ -13,8 +13,10 @@ process = chorus with {
   I = environment {
     lfoRate = 0.513;
     lfoShape = 0; /* triangle */
-    delaymin = 1.54e-3;
-    delaymax = 5.15e-3;
+    delaymin(0) = 1.54e-3;
+    delaymax(0) = 5.15e-3;
+    delaymin(1) = 1.51e-3;
+    delaymax(1) = 5.40e-3;
     stereo = 1;
   };
 
@@ -22,8 +24,10 @@ process = chorus with {
   II = environment {
     lfoRate = 0.863;
     lfoShape = 0; /* triangle */
-    delaymin = 1.54e-3;
-    delaymax = 5.15e-3;
+    delaymin(0) = 1.54e-3;
+    delaymax(0) = 5.15e-3;
+    delaymin(1) = 1.51e-3;
+    delaymax(1) = 5.40e-3;
     stereo = 1;
   };
 
@@ -33,8 +37,10 @@ process = chorus with {
     // found in documents and not matching the Juno60 sample:
     // 15.175 Hz (too fast), 8 Hz (too slow)
     lfoShape = 1; /* sine-like */
-    delaymin = 3.22e-3;
-    delaymax = 3.56e-3;
+    delaymin(0) = 3.22e-3;
+    delaymax(0) = 3.56e-3;
+    delaymin(1) = 3.28e-3;
+    delaymax(1) = 3.65e-3;
     stereo = 0;
   };
 
@@ -42,8 +48,8 @@ process = chorus with {
   s = environment {
     lfoRate = (I.lfoRate, II.lfoRate, III.lfoRate) : selectByMode : smooth;
     lfoShape = (I.lfoShape, II.lfoShape, III.lfoShape) : selectByMode : smooth;
-    delaymin = (I.delaymin, II.delaymin, III.delaymin) : selectByMode : smooth;
-    delaymax = (I.delaymax, II.delaymax, III.delaymax) : selectByMode : smooth;
+    delaymin(i) = (I.delaymin(i), II.delaymin(i), III.delaymin(i)) : selectByMode : smooth;
+    delaymax(i) = (I.delaymax(i), II.delaymax(i), III.delaymax(i)) : selectByMode : smooth;
     stereo = (I.stereo, II.stereo, III.stereo) : selectByMode : smooth;
   };
 
@@ -52,16 +58,15 @@ process = chorus with {
     ((x, out1) : si.interpolate(enabled : smooth)),
     ((x, out2) : si.interpolate(enabled : smooth))
   with {
-    out1 = x <: (*(0.83), delayModel.line1(lfo1 : delayAt)) :> +;
-    out2 = x <: (*(0.83), delayModel.line2(lfo2 : delayAt)) :> +;
+    out1 = x <: (*(0.83), delayModel.line1(lfo1 : delayAt(0))) :> +;
+    out2 = x <: (*(0.83), delayModel.line2(lfo2 : delayAt(1))) :> +;
 
     /* Delay model */
     delayModel = analogDelayModel;
     //delayModel = digitalDelayModel;
 
     /* Capacity of delay */
-    delaycap = 10e-3; // seconds, must be >> delay time
-    delaycapframes = int(ceil(delaycap * ma.SR)); // frames, rounded up
+    delaycapframes = 2048;
 
     /* LFO */
     rawLfo = (triangle, sine) : si.interpolate(s.lfoShape) with {
@@ -85,7 +90,7 @@ process = chorus with {
       line1 = ffunction(float AnalogDelay1(float, float), <math.h>, "");
       line2 = ffunction(float AnalogDelay2(float, float), <math.h>, "");
     };
-    delayAt = *(s.delaymax - s.delaymin) : +(s.delaymin);
+    delayAt(i) = *(s.delaymax(i) - s.delaymin(i)) : +(s.delaymin(i));
   };
 
   /**/
